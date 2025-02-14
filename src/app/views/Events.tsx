@@ -1,0 +1,78 @@
+"use client"
+import AttendeeDetails from "./AttendeeDetails";
+import Steps from "../components/Steps";
+import TicketSelection from "./TicketSelection";
+import Ready from "./Ready";
+import { useState, useEffect } from "react";
+import { setItem, getItem } from "../util/localStorage";
+
+export interface Card {
+  name: string;
+  email: string;
+  ticketType: string;
+  numberOfTicket: number;
+  specialRequest: string;
+}
+export default function Events() {
+  const [currentStep, setCurrentStep] = useState<number>(1)
+  
+  const [progressBarWidth, setProgressBarWidth] = useState<number>(33.3)
+  
+  const [card, setCard] = useState<Card>(
+    ()=> {
+      const items = getItem("ticket")
+      return (items as Card) || {
+        name: "",
+        email: "",
+        ticketType: "",
+        numberOfTicket: 1,
+        specialRequest: ""
+      }
+    }
+  )
+  useEffect(() =>{
+    setItem("ticket", card)
+  }, [card])
+
+  const handleNextStep = ()=> {
+    setCurrentStep(prev => prev + 1)
+    setProgressBarWidth(prev => prev + 33.3)
+  }
+
+  const handlePrevStep = ()=> {
+    setCurrentStep(prev => prev - 1)
+    setProgressBarWidth(prev => prev - 33.3)
+  }
+  const handleFirstStep = ()=> {
+    setCurrentStep(1)
+    setProgressBarWidth(33.3)
+  }
+
+  const getTicketType = (id:string)=> {
+    console.log(id)
+    setCard((prev)=> ({...prev, ticketType: id}))
+  }
+  const getNumberOfTicket = (id:number)=> {
+    setCard((prev)=> ({...prev, numberOfTicket: id}))
+  }
+  const handleChange = (e)=> {
+    const { name, value } = e.target
+
+    setCard((prev)=> ({...prev, [name]: value}))
+  }
+
+  // console.log(card)
+  return (
+    <div className="w-[700px] max-[800px]:w-full bg-[#041E23] space-y-[32px] border border-[#0E464F] p-12 max-[615px]:p-8 max-[451px]:p-5  rounded-[40px]">
+      <Steps currentStep={currentStep} progressBar={progressBarWidth} />
+      {
+        currentStep === 1 ? 
+        <TicketSelection handleNextStep={handleNextStep} getTicketType={getTicketType} getNumberOfTicket={getNumberOfTicket} /> : 
+        currentStep === 2 ? 
+        <AttendeeDetails handleNextStep={handleNextStep} handlePrevStep={handlePrevStep} card={card} handleChange={handleChange} /> :
+        
+        <Ready handleFirstStep={handleFirstStep} card={card} />
+      }
+    </div>
+  );
+}

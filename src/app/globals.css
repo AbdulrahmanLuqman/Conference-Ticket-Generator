@@ -2,20 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #02191D;
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+  @apply p-[20px] max-[300px]:px-2
+}
+.ticket {
+  background-image: url("/public/assets/ticket_bg.png");
+  height: 300px;
 }
