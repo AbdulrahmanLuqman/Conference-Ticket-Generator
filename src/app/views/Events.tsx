@@ -55,7 +55,7 @@ export default function Events() {
   const getNumberOfTicket = (id:number)=> {
     setCard((prev)=> ({...prev, numberOfTicket: id}))
   }
-  const handleChange = (e)=> {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
     const { name, value } = e.target
 
     setCard((prev)=> ({...prev, [name]: value}))
