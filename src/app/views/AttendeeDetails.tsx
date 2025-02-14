@@ -7,7 +7,7 @@ import { ChangeEvent, useRef, useState } from "react"
 
 // const CLOUDINARY_API = 
 
-export default function AttendeeDetails({handleNextStep, handlePrevStep, card, handleChange}: {handleNextStep: ()=> void, handlePrevStep: ()=> void, card: Card, handleChange: ()=> void}){
+export default function AttendeeDetails({handleNextStep, handlePrevStep, card, handleChange}: {handleNextStep: ()=> void, handlePrevStep: ()=> void, card: Card, handleChange: (e)=> void}){
     const fileRef = useRef<HTMLInputElement | null>(null)
     const [picture, setPicture] = useState<string | null>(null)
     const [nameError, setNameError] = useState(false)
