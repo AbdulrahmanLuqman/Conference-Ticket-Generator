@@ -11,7 +11,7 @@ export interface Card {
   name: string;
   email: string;
   ticketType: string;
-  numberOfTicket: number;
+  numberOfTicket: number | string;
   specialRequest: string;
 }
 export default function Events() {
@@ -36,9 +36,17 @@ export default function Events() {
     setItem("ticket", card)
   }, [card])
 
+  const [ticketTypeError, setTicketTypeError] = useState("")
+
   const handleNextStep = ()=> {
+    if(card.ticketType === "") {
+      setTicketTypeError("Choose a ticket")
+      return
+    }
+
+    setTicketTypeError("")
     setCurrentStep(prev => prev + 1)
-    setProgressBarWidth(prev => prev + 33.3)
+    setProgressBarWidth((prev) => Math.min(prev + 33.3, 100));
   }
 
   const handlePrevStep = ()=> {
@@ -55,7 +63,6 @@ export default function Events() {
   }
 
   const getTicketType = (id:string)=> {
-    console.log(id)
     setCard((prev)=> ({...prev, ticketType: id}))
   }
   const getNumberOfTicket = (id:number)=> {
@@ -66,14 +73,12 @@ export default function Events() {
 
     setCard((prev)=> ({...prev, [name]: value}))
   }
-
-  // console.log(card)
   return (
-    <div className="w-[700px] max-[800px]:w-full bg-[#041E23] space-y-[32px] border border-[#0E464F] p-12 max-[615px]:p-8 max-[451px]:p-5  rounded-[40px]">
+    <div className="w-[700px] max-[800px]:w-full bg-[#041E23] space-y-[32px] border border-[#0E464F] p-12 max-[615px]:p-8 max-[451px]:p-5 rounded-[40px]">
       <Steps currentStep={currentStep} progressBar={progressBarWidth} />
       {
         currentStep === 1 ? 
-        <TicketSelection handleNextStep={handleNextStep} getTicketType={getTicketType} getNumberOfTicket={getNumberOfTicket} /> : 
+        <TicketSelection handleNextStep={handleNextStep} getTicketType={getTicketType} getNumberOfTicket={getNumberOfTicket} error={ticketTypeError} /> : 
         currentStep === 2 ? 
         <AttendeeDetails handleNextStep={handleNextStep} handlePrevStep={handlePrevStep} card={card} handleChange={handleChange} getImage={getImage} /> :
         

@@ -2,8 +2,25 @@ import Image from "next/image"
 import backgroundImage from "/public/assets/ticket_bg.png"
 import BarCode from "/public/assets/Bar_Code.png"
 import { Card } from "./Events"
+import html2canvas from "html2canvas"
+import { useRef } from "react"
+
 
 export default function Ready({handleFirstStep, card}: {handleFirstStep: () => void, card: Card}){
+  const divRef = useRef<HTMLDivElement>(null)
+
+  const downloadImage = async () => {
+    if (!divRef.current) return;
+
+    const canvas = await html2canvas(divRef.current);
+    const image = canvas.toDataURL("image/png");
+
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = "screenshot.png"; // Change to .jpg if needed
+    link.click();
+  };
+
   return (
       <div className="flex flex-col items-center gap-8 ">
           <div className="w-full flex flex-col gap-4 justify-center items-center">
@@ -11,7 +28,7 @@ export default function Ready({handleFirstStep, card}: {handleFirstStep: () => v
               <p className="text-[#FAFAFA]">Check your email for a copy or you can <span className="font-semibold">download</span></p>
           </div>
 
-          <div className="relative h-[600px] w-[300px]">
+          <div ref={divRef} className="relative h-[600px] w-[300px]">
             <Image src={backgroundImage} alt="ticket" className="absolute top-0 left-0" />
             <div className="absolute left-0 right-0 mx-auto my-5 p-3 h-[75%] w-[90%] border border-[#24A0B5] rounded-[16px] flex flex-col gap-[20px] items-center">
               <div className="flex flex-col items-center">
@@ -61,7 +78,7 @@ export default function Ready({handleFirstStep, card}: {handleFirstStep: () => v
             <button onClick={handleFirstStep} className="h-full w-[200px] bg-transparent hover:bg-[#24A0B5] border border-[#24A0B5] rounded-[8px] px-3">
               Book Another Ticket
             </button>
-            <button className="h-full w-[200px] bg-[#24A0B5] hover:bg-transparent border border-[#24A0B5] rounded-[8px]">
+            <button onClick={downloadImage} className="h-full w-[200px] bg-[#24A0B5] hover:bg-transparent border border-[#24A0B5] rounded-[8px]">
               Download Ticket
             </button>
           </div>
