@@ -1,9 +1,6 @@
-"use client"
-
-import { useState } from "react"
 
 export default function Steps({currentStep, progressBar}: {currentStep: number, progressBar: number}){
-    const [steps, setSteps] = useState<string[]>(["Ticket Selection", "Attendance Details", "Ready"])
+    const steps:string[] = ["Ticket Selection", "Attendance Details", "Ready"]
     return (
         <div className="flex flex-col gap-3">
             <div className="flex justify-between gap-2 items-center flex-wrap">

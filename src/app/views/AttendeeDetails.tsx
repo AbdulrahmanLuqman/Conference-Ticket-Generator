@@ -3,17 +3,17 @@ import Image from "next/image"
 import Cloud from "/public/assets/cloud.svg"
 import Envelope from "/public/assets/envelope.svg"
 import { Card } from "./Events"
-import { ChangeEvent, useRef, useState } from "react"
+import { ChangeEvent, useRef, useState, FormEvent } from "react"
 
 // const CLOUDINARY_API = 
 
-export default function AttendeeDetails({handleNextStep, handlePrevStep, card, handleChange}: {handleNextStep: ()=> void, handlePrevStep: ()=> void, card: Card, handleChange: (e)=> void}){
+    export default function AttendeeDetails({handleNextStep, handlePrevStep, card, handleChange}: {handleNextStep: ()=> void, handlePrevStep: ()=> void, card: Card, handleChange: (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>)=> void}){
     const fileRef = useRef<HTMLInputElement | null>(null)
     const [picture, setPicture] = useState<string | null>(null)
     const [nameError, setNameError] = useState(false)
     const [emailError, setEmailError] = useState(false)
     const [requestError, setRequestError] = useState(false)
-    const getTicket = (e: any)=> {
+    const getTicket = (e: FormEvent<HTMLFormElement>)=> {
         e.preventDefault()
 
         if(card.name.trim() === ""){

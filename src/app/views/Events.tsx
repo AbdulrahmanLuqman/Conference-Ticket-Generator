@@ -3,7 +3,7 @@ import AttendeeDetails from "./AttendeeDetails";
 import Steps from "../components/Steps";
 import TicketSelection from "./TicketSelection";
 import Ready from "./Ready";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { setItem, getItem } from "../util/localStorage";
 
 export interface Card {
@@ -55,7 +55,7 @@ export default function Events() {
   const getNumberOfTicket = (id:number)=> {
     setCard((prev)=> ({...prev, numberOfTicket: id}))
   }
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=> {
+  const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>)=> {
     const { name, value } = e.target
 
     setCard((prev)=> ({...prev, [name]: value}))
