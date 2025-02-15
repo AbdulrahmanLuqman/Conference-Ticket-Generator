@@ -79,7 +79,7 @@ const UPLOAD_PRESET = "ml_default";
             <div className="border border-[#07373F] rounded-[24px] w-full bg-[#052228] p-6 space-y-[32px]">
                 <label htmlFor="pfp" className="cursor-pointer">Upload Profile Photo*</label>
                 <div className="bg-[#00000033] w-full flex justify-center">
-                    <label onClick={handleClick} htmlFor="pfp" className={`h-[240px] w-[240px] flex flex-col gap-4 justify-center items-center rounded-[32px] bg-[#0E464F] cursor-pointer overflow-hidden ${fileError && "border-4 border-red-500"}`}>
+                    <label onClick={handleClick} htmlFor="pfp" className={`relative h-[240px] w-[240px] flex flex-col gap-4 justify-center items-center rounded-[32px] bg-[#0E464F] cursor-pointer overflow-hidden ${fileError && "border-4 border-red-500"}`}>
                         {
                             card.image ? <Image src={card.image} alt="Cloud" width={240} height={240} unoptimized /> : 
                             (
