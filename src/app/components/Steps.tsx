@@ -1,5 +1,5 @@
 
-export default function Steps({currentStep, progressBar}: {currentStep: number, progressBar: number}){
+export default function Steps({currentStep, progressBarWidth}: {currentStep: number, progressBarWidth: number}){
     const steps:string[] = ["Ticket Selection", "Attendance Details", "Ready"]
     return (
         <div className="flex flex-col gap-3">
@@ -8,7 +8,7 @@ export default function Steps({currentStep, progressBar}: {currentStep: number, 
                 <span className="text-[16px] text-[#FAFAFA] w-fit">Step {currentStep}/3</span>
             </div>
             <div className="w-full bg-[#0E464F] h-1 rounded">
-                <div className={`w-[${progressBar}%] rounded bg-[#24A0B5] h-full`}></div>
+                <div style={{ width: `${progressBarWidth}%` }} className={`rounded bg-[#24A0B5] h-full`}></div>
             </div>
         </div>
     )

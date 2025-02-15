@@ -17,7 +17,7 @@ export default function Ready({handleFirstStep, card}: {handleFirstStep: () => v
 
     const link = document.createElement("a");
     link.href = image;
-    link.download = "screenshot.png"; // Change to .jpg if needed
+    link.download = "screenshot.png";
     link.click();
   };
 
@@ -25,7 +25,7 @@ export default function Ready({handleFirstStep, card}: {handleFirstStep: () => v
       <div className="flex flex-col items-center gap-8 ">
           <div className="w-full flex flex-col gap-4 justify-center items-center">
               <h3 className="text-[32px]">Your Ticket is Booked!</h3>
-              <p className="text-[#FAFAFA]">Check your email for a copy or you can <span className="font-semibold">download</span></p>
+              <p className="text-[#FAFAFA] text-center">Check your email for a copy or you can <span className="font-semibold" onClick={downloadImage}>download</span></p>
           </div>
 
           <div ref={divRef} className="relative h-[600px] w-[300px]">
@@ -74,11 +74,11 @@ export default function Ready({handleFirstStep, card}: {handleFirstStep: () => v
             </div>
             <Image src={BarCode} alt="barcode" className="absolute bottom-6 left-0 right-0 mx-auto" />
           </div>
-          <div className="w-full h-[48px] flex flex-wrap justify-center gap-8">
-            <button onClick={handleFirstStep} className="h-full w-[200px] bg-transparent hover:bg-[#24A0B5] border border-[#24A0B5] rounded-[8px] px-3">
+          <div className="w-full flex flex-wrap justify-center gap-8">
+            <button onClick={handleFirstStep} className="h-full w-[200px] bg-transparent hover:bg-[#24A0B5] border border-[#24A0B5] rounded-[8px] p-3">
               Book Another Ticket
             </button>
-            <button onClick={downloadImage} className="h-full w-[200px] bg-[#24A0B5] hover:bg-transparent border border-[#24A0B5] rounded-[8px]">
+            <button onClick={downloadImage} className="h-full w-[200px] bg-[#24A0B5] hover:bg-transparent border border-[#24A0B5] rounded-[8px] p-3">
               Download Ticket
             </button>
           </div>

@@ -75,7 +75,7 @@ export default function Events() {
   }
   return (
     <div className="w-[700px] max-[800px]:w-full bg-[#041E23] space-y-[32px] border border-[#0E464F] p-12 max-[615px]:p-8 max-[451px]:p-5 rounded-[40px]">
-      <Steps currentStep={currentStep} progressBar={progressBarWidth} />
+      <Steps currentStep={currentStep} progressBarWidth={progressBarWidth} />
       {
         currentStep === 1 ? 
         <TicketSelection handleNextStep={handleNextStep} getTicketType={getTicketType} getNumberOfTicket={getNumberOfTicket} error={ticketTypeError} /> : 
