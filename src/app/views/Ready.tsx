@@ -22,7 +22,7 @@ export default function Ready({handleFirstStep, card}: {handleFirstStep: () => v
                 </div>
               </div>
               <div className="border-[4px] border-[#24A0B580] rounded-[12px] h-[140px] w-[140px] overflow-hidden">
-                {/* <Image src={Profile} alt="Me" className="h-[140px] w-full" /> */}
+                <Image src={card.image} alt="Me" width={140} height={140} />
               </div>
               <div className="w-full h-[200px] p-1 border border-[#133D44] rounded-lg bg-[#08343C] flex flex-col">
                 <div className="w-full flex">

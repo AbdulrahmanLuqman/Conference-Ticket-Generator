@@ -5,11 +5,13 @@ import Envelope from "/public/assets/envelope.svg"
 import { Card } from "./Events"
 import { ChangeEvent, useRef, useState, FormEvent } from "react"
 
-// const CLOUDINARY_API = 
+const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dzeryevl5/image/upload";
+const UPLOAD_PRESET = "ml_default";
 
-    export default function AttendeeDetails({handleNextStep, handlePrevStep, card, handleChange}: {handleNextStep: ()=> void, handlePrevStep: ()=> void, card: Card, handleChange: (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>)=> void}){
+    export default function AttendeeDetails({handleNextStep, handlePrevStep, card, handleChange, getImage}: {handleNextStep: ()=> void, handlePrevStep: ()=> void, card: Card, handleChange: (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>)=> void, getImage: (image:string)=> void}){
     const fileRef = useRef<HTMLInputElement | null>(null)
     const [picture, setPicture] = useState<string | null>(null)
+    const [loading, setLoading] = useState(false);
     const [nameError, setNameError] = useState(false)
     const [emailError, setEmailError] = useState(false)
     const [requestError, setRequestError] = useState(false)
@@ -36,14 +38,32 @@ import { ChangeEvent, useRef, useState, FormEvent } from "react"
     const handleClick = ()=> {
         if (fileRef.current) fileRef.current.click()
     }
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>)=> {
-        const file = e.target.files?.[0]
+    const handleFileChange = async (e: ChangeEvent<HTMLInputElement>)=> {
+        const file = e.target.files?.[0];
+        if (!file) return;
 
-        if (file) {
-            const imageURL = URL.createObjectURL(file)
-            setPicture(imageURL)
+        const imageURL = URL.createObjectURL(file);
+        getImage(imageURL);
+
+        setLoading(true);
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", UPLOAD_PRESET);
+
+        try {
+            const res = await fetch(CLOUDINARY_URL, {
+                method: "POST",
+                body: formData,
+            });
+            const data = await res.json();
+            getImage(data.secure_url);
+        } catch (error) {
+            console.error("Upload failed", error);
+        } finally {
+            setLoading(false);
         }
     }
+    console.log(picture)
     return (
         <form onSubmit={getTicket} className="p-[24px] max-[451px]:p-[15px] space-y-[32px] border border-[#0E464F] bg-[#08252B] rounded-[32px] w-full">
             <div className="border border-[#07373F] rounded-[24px] w-full bg-[#052228] p-6 space-y-[32px]">
@@ -51,7 +71,7 @@ import { ChangeEvent, useRef, useState, FormEvent } from "react"
                 <div className="bg-[#00000033] w-full flex justify-center">
                     <label onClick={handleClick} htmlFor="pfp" className="h-[240px] w-[240px] flex flex-col gap-4 justify-center items-center rounded-[32px] bg-[#0E464F] p-6 cursor-pointer">
                         {
-                            picture ? <Image src={picture} alt="Cloud" width={240} height={240} /> : <Image src={Cloud} alt="Cloud" />
+                            card.image ? <Image src={card.image} alt="Cloud" width={240} height={240} /> : <Image src={Cloud} alt="Cloud" />
                         }
                         
                         <p className="text-center">Drag & drop or click to upload</p>

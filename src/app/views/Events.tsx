@@ -7,6 +7,7 @@ import { useState, useEffect, ChangeEvent } from "react";
 import { setItem, getItem } from "../util/localStorage";
 
 export interface Card {
+  image: string
   name: string;
   email: string;
   ticketType: string;
@@ -22,6 +23,7 @@ export default function Events() {
     ()=> {
       const items = getItem("ticket")
       return (items as Card) || {
+        image: "",
         name: "",
         email: "",
         ticketType: "",
@@ -48,6 +50,10 @@ export default function Events() {
     setProgressBarWidth(33.3)
   }
 
+  const getImage = (image: string)=> {
+    setCard((prev)=> ({...prev, image: image}))
+  }
+
   const getTicketType = (id:string)=> {
     console.log(id)
     setCard((prev)=> ({...prev, ticketType: id}))
@@ -69,7 +75,7 @@ export default function Events() {
         currentStep === 1 ? 
         <TicketSelection handleNextStep={handleNextStep} getTicketType={getTicketType} getNumberOfTicket={getNumberOfTicket} /> : 
         currentStep === 2 ? 
-        <AttendeeDetails handleNextStep={handleNextStep} handlePrevStep={handlePrevStep} card={card} handleChange={handleChange} /> :
+        <AttendeeDetails handleNextStep={handleNextStep} handlePrevStep={handlePrevStep} card={card} handleChange={handleChange} getImage={getImage} /> :
         
         <Ready handleFirstStep={handleFirstStep} card={card} />
       }
