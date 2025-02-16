@@ -8,6 +8,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        "roadRage": "Road Rage"
+      }
     },
   },
   plugins: [],

@@ -2,56 +2,66 @@
 import Image from "next/image"
 import Cloud from "/public/assets/cloud.svg"
 import Envelope from "/public/assets/envelope.svg"
-import { Card } from "./Events"
+import { Ticket } from "./Events"
 import { ChangeEvent, useRef, useState, FormEvent } from "react"
 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dzeryevl5/image/upload";
 const UPLOAD_PRESET = "ml_default";
 
-    export default function AttendeeDetails({handleNextStep, handlePrevStep, card, handleChange, getImage}: {handleNextStep: ()=> void, handlePrevStep: ()=> void, card: Card, handleChange: (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>)=> void, getImage: (image:string)=> void}){
+interface Error {
+    image: string;
+    name: string;
+    email: string;
+    specialRequest: string;
+}
+
+export default function AttendeeDetails({handleNextStep, handlePrevStep, ticket, handleChange, getImage}: {handleNextStep: ()=> void, handlePrevStep: ()=> void, ticket: Ticket, handleChange: (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>)=> void, getImage: (image:string)=> void}){
     const fileRef = useRef<HTMLInputElement | null>(null)
-    
-    const [fileError, setFileError] = useState(false)
-    const [nameError, setNameError] = useState("")
-    const [emailError, setEmailError] = useState("")
-    const [requestError, setRequestError] = useState("")
+    const [ticketError, setTicketError] = useState<Error>({
+        image: "",
+        name: "",
+        email: "",
+        specialRequest: "",
+    })
+
+    const ValidateForms = ()=> {
+        const error:Error = {
+            image: "",
+            name: "",
+            email: "",
+            specialRequest: "",
+        }
+
+        if(!ticket.image) error.image = "Image is required"
+
+        if(!ticket.name) error.name = "Name is required"
+
+        if(!ticket.email) {
+            error.email = "Email is required"
+        } else if (!/\S+@\S+\.\S+/.test(ticket.email)) {
+            error.email = "Email address is not valid"
+        }
+        
+        if(!ticket.specialRequest) error.specialRequest = "Type in your request or NIL"
+
+        setTicketError(error)
+
+        return Object.values(error).some((msg) => msg !== "");
+
+    }
     const getTicket = (e: FormEvent<HTMLFormElement>)=> {
-        e.preventDefault()
+        e.preventDefault() 
 
-        let isValid = true
+        const hasError = ValidateForms()
 
-        if (card.image === "") {
-            setFileError(true);
-            isValid = false;
-        }
-        if (card.name.trim() === "") {
-            setNameError("Name is required");
-            isValid = false;
-        }
-        if (card.email.trim() === "") {
-            setEmailError("Email is required");
-            isValid = false;
-        }
-        if (card.specialRequest.trim() === "") {
-            setRequestError("Type in your request or put NIL");
-            isValid = false;
-        }
-        
-        if (!isValid) return; 
-    
-        
-        handleNextStep();
-    
-        setNameError("");
-        setEmailError("");
-        setRequestError("");
-        
+        if (hasError) return
+
+        handleNextStep()
     }
     const handleClick = ()=> {
         if (fileRef.current) fileRef.current.click()
     }
     const handleFileChange = async (e: ChangeEvent<HTMLInputElement>)=> {
-        setFileError(false)
         const file = e.target.files?.[0];
         if (!file) return
 
@@ -79,9 +89,9 @@ const UPLOAD_PRESET = "ml_default";
             <div className="border border-[#07373F] rounded-[24px] w-full bg-[#052228] p-6 space-y-[32px]">
                 <label htmlFor="pfp" className="cursor-pointer">Upload Profile Photo*</label>
                 <div className="bg-[#00000033] w-full flex justify-center">
-                    <label onClick={handleClick} htmlFor="pfp" className={`relative h-[240px] w-[240px] flex flex-col gap-4 justify-center items-center rounded-[32px] bg-[#0E464F] cursor-pointer overflow-hidden ${fileError && "border-4 border-red-500"}`}>
+                    <label onClick={handleClick} className={`relative h-[240px] w-[240px] flex flex-col gap-4 justify-center items-center rounded-[32px] bg-[#0E464F] cursor-pointer overflow-hidden`}>
                         {
-                            card.image ? <Image src={card.image} alt="Cloud" width={240} height={240} unoptimized /> : 
+                            ticket.image ? <Image src={ticket.image} alt="Cloud" width={240} height={240} unoptimized /> : 
                             (
                                 <>
                                     <Image src={Cloud} alt="Cloud" />
@@ -90,7 +100,7 @@ const UPLOAD_PRESET = "ml_default";
                             )
                         }
                     </label>
-                    <input onChange={handleFileChange} ref={fileRef} type="file" id="pfp" accept="image/*" className="hidden" />
+                    <input onClick={(e) => e.stopPropagation()} onChange={handleFileChange} ref={fileRef} type="file" id="pfp" accept="image/*" className="hidden" />
                 </div>
             </div>
 
@@ -98,23 +108,23 @@ const UPLOAD_PRESET = "ml_default";
 
             <div className="flex flex-col gap-2">
                 <label htmlFor="name">Enter your name*</label>
-                <input type="text" id="name" name="name" value={card.name} onChange={handleChange} className={`outline-none bg-transparent w-full rounded-lg border border-[#07373F] p-3 ${nameError && "border-red-600"}`} />
-                <span className="text-red-500">{nameError}</span>
+                <input type="text" id="name" name="name" value={ticket.name} onChange={handleChange} className={`outline-none bg-transparent w-full rounded-lg border border-[#07373F] p-3`} />
+                <span className="text-red-500">{ticketError.name}</span>
             </div>
 
             <div className="flex flex-col gap-2">
                 <label htmlFor="email">Enter your email*</label>
-                <div className={`bg-transparent w-full rounded-lg border border-[#07373F] flex gap-2 overflow-hidden p-3 ${emailError && "border-red-600"}`}>
+                <div className={`bg-transparent w-full rounded-lg border border-[#07373F] flex gap-2 overflow-hidden p-3`}>
                     <Image src={Envelope} alt="email" />
-                    <input type="text" id="email" name="email" value={card.email} onChange={handleChange} className="outline-none w-full bg-transparent" />
+                    <input type="text" id="email" name="email" value={ticket.email} onChange={handleChange} className="outline-none w-full bg-transparent" />
                 </div>
-                <span className="text-red-500">{emailError}</span>
+                <span className="text-red-500">{ticketError.email}</span>
             </div>
 
             <div className="flex flex-col gap-2">
                 <label htmlFor="specialRequest">Special Request?*</label>
-                <textarea id="specialRequest" name="specialRequest" value={card.specialRequest} onChange={handleChange} className={`outline-none bg-transparent w-full rounded-lg border border-[#07373F] p-3 h-[127px] ${requestError && "border-red-600"}`} />
-                <span className="text-red-500">{requestError}</span>
+                <textarea id="specialRequest" name="specialRequest" value={ticket.specialRequest} onChange={handleChange} className={`outline-none bg-transparent w-full rounded-lg border border-[#07373F] p-3 h-[127px]`} />
+                <span className="text-red-500">{ticketError.specialRequest}</span>
             </div>
 
             <div className="w-full flex flex-wrap-reverse justify-center gap-8">
