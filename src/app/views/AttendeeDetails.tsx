@@ -88,7 +88,7 @@ export default function AttendeeDetails({handleNextStep, handlePrevStep, ticket,
         <form onSubmit={getTicket} className="p-[24px] max-[451px]:p-[15px] space-y-[32px] border border-[#0E464F] bg-[#08252B] rounded-[32px] w-full">
             <div className="border border-[#07373F] rounded-[24px] w-full bg-[#052228] p-6 space-y-[32px]">
                 <label htmlFor="pfp" className="cursor-pointer">Upload Profile Photo*</label>
-                <div className="bg-[#00000033] w-full flex justify-center">
+                <div className="bg-[#00000033] w-full flex flex-col items-center">
                     <label onClick={handleClick} className={`relative h-[240px] w-[240px] flex flex-col gap-4 justify-center items-center rounded-[32px] bg-[#0E464F] cursor-pointer overflow-hidden`}>
                         {
                             ticket.image ? <Image src={ticket.image} alt="Cloud" width={240} height={240} unoptimized /> : 
@@ -101,6 +101,7 @@ export default function AttendeeDetails({handleNextStep, handlePrevStep, ticket,
                         }
                     </label>
                     <input onClick={(e) => e.stopPropagation()} onChange={handleFileChange} ref={fileRef} type="file" id="pfp" accept="image/*" className="hidden" />
+                    <span className="text-red-500">{ticketError.image}</span>
                 </div>
             </div>
 
